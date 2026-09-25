@@ -1,0 +1,48 @@
+# Central da Polícia — versão com Anti-Nuke
+
+Integração feita no `main.py` para adicionar proteção Anti-Nuke.
+
+## Proteções
+- Exclusão de cargo
+- Exclusão de canal
+- Alteração de nome/configuração de cargo
+- Alteração de nome/permissões/configuração de canal
+- Adição de bot
+- Remoção de bot
+- Concessão/alteração de permissões administrativas via alteração de cargo
+- Banimento de membro
+- Kick de membro
+
+## Punição
+Ao identificar o executor pelo Audit Log, o bot tenta remover todos os cargos que ele consegue gerenciar, deixando apenas `@everyone` quando a hierarquia do Discord permitir.
+
+O próprio bot é ignorado para não se punir pelas ações que ele mesmo executa (por exemplo, fechar tickets).
+
+## Permissões necessárias
+No servidor, o cargo do bot precisa ter:
+- Ver Registro de Auditoria
+- Gerenciar Cargos
+- O cargo do bot deve ficar acima dos cargos que ele precisa remover.
+
+## Token
+O token que estava no arquivo enviado foi removido desta versão por segurança. Gere um novo token no Developer Portal do Discord e coloque-o no `TOKEN` do `main.py` antes de executar.
+
+Não compartilhe o token em chats ou prints.
+
+
+## 🎭 Sistema de PEDIR SET
+
+Integrado no `main.py` com os 6 fluxos:
+POLICE, INVESTIGATIVE / DEA, BOP, SHERIFF-S, FIB e EXÉRCITO.
+
+A autorização para aprovar/recusar usa os 15 IDs de cargos definidos em
+`CARGOS_APROVADORES_IDS`.
+
+Os canais são vinculados por ID em `SET_CANAIS`.
+
+### Importante
+Os 15 cargos são apenas cargos de autorização para a equipe que aprova/recusa.
+Os cargos que serão entregues ao recrutado ainda não foram definidos neste arquivo,
+porque nenhum ID de cargo de SET por departamento foi fornecido.
+
+O bot registra aprovação/recusa no canal `relatório-rec-*`.
