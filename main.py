@@ -26,11 +26,43 @@ CANAL_MEMBROS_SAIRAM_ID = 1547843850427441193
 # 📋 Registro de advertências
 CANAL_ADVERTENCIAS_ID = 1547682940870201446
 
+# 🎙️ Call em que o bot deve permanecer enquanto estiver online.
+CANAL_VOZ_FIXO_ID = 1553671143192264745
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix=PREFIX, intents=intents, help_command=None)
+
+
+async def conectar_call_fixa():
+    """Conecta o bot à call configurada assim que ele fica online."""
+    canal = bot.get_channel(CANAL_VOZ_FIXO_ID)
+
+    if not isinstance(canal, (discord.VoiceChannel, discord.StageChannel)):
+        print(f"❌ Call fixa não encontrada ou não é um canal de voz: {CANAL_VOZ_FIXO_ID}")
+        return
+
+    try:
+        voice_client = canal.guild.voice_client
+        if voice_client and voice_client.is_connected():
+            if voice_client.channel and voice_client.channel.id == CANAL_VOZ_FIXO_ID:
+                return
+            await voice_client.move_to(canal)
+        else:
+            if voice_client:
+                await voice_client.disconnect(force=True)
+            await canal.connect(reconnect=True, self_deaf=True)
+        print(f"🎙️ Bot conectado à call fixa: {canal.name}")
+    except (discord.ClientException, discord.Forbidden, discord.HTTPException, OSError) as erro:
+        print(f"❌ Não consegui entrar na call fixa ({CANAL_VOZ_FIXO_ID}): {erro}")
+
+
+@bot.event
+async def on_connect():
+    await bot.wait_until_ready()
+    await conectar_call_fixa()
 
 
 def pode_criar_embed(member: discord.Member) -> bool:
